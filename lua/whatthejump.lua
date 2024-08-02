@@ -1,5 +1,11 @@
 local api, uv = vim.api, vim.loop
 
+local M = {}
+
+M.config = {
+  winblend = 15
+}
+
 --- @class Jump
 --- @field bufnr integer
 --- @field col integer
@@ -65,7 +71,7 @@ local function refresh_win(height, width)
     height = height,
     style = 'minimal',
   })
-  vim.wo[gwin].winblend = 15
+  vim.wo[gwin].winblend = M.config.winblend
 
   return gwin
 end
@@ -186,8 +192,6 @@ local function get_text(jumplist, current)
   return lines, current_lnum, width
 end
 
-local M = {}
-
 --- @param forward? boolean
 function M.show_jumps(forward)
   disable_cmoved_au()
@@ -208,6 +212,11 @@ function M.show_jumps(forward)
     refresh_win_timer()
     enable_cmoved_au()
   end)
+end
+
+function M.setup(opts)
+  opts = opts or {}
+  M.config = vim.tbl_extend("force", M.config, opts)
 end
 
 return M
