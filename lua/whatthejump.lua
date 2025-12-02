@@ -203,6 +203,10 @@ function M.show_jumps(forward)
   local lines, current_line, width = get_text(jumplist, target)
 
   vim.schedule(function()
+    if #lines == 0 then
+      close_win()
+      return
+    end
     local win = refresh_win(#lines, width + 2)
     local buf = api.nvim_win_get_buf(win)
     render_buf(buf, lines, current_line)
